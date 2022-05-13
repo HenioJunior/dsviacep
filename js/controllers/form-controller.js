@@ -1,5 +1,5 @@
 import Address from "../models/address.js";
-import * as requestService from '../services/request-service.js';
+import * as addressService from '../services/address-service.js';
 
 function State() {
 
@@ -34,16 +34,36 @@ export function init() {
     state.inputNumber.addEventListener('change', handlerInputNumberChange);
     state.btnClear.addEventListener('click', handleBtnClearClick);
     state.btnSave.addEventListener('click', handleBtnSaveClick);
+    state.inputCep.addEventListener('change', handleInputCepChange);
+}
+
+async function handleInputCepChange(event) {
+    const cep = event.target.value;
+
+    try {
+        const address = await addressService.findByCep(cep);
+
+        state.inputStreet.value = address.street;
+        state.inputCity.value = address.city;
+        state.address = address;
     
+        setFormError("cep", "");
+        state.inputNumber.focus();    
+    }
+    catch (e) {
+        state.inputStreet.value = "";
+        state.inputCity.value = "";
+        state.inputNumber.value = "";
+        setFormError("cep", "Informe um CEP válido");
+    }
 }
 
 async function handleBtnSaveClick(event) {
     event.preventDefault();
-    const result = await requestService.getJson('https://viacep.com.br/ws/01001000/json/');
-    console.log(result);
+    console.log(event.target);
 }
 
-function handlerInputNumberChange(event){
+function handlerInputNumberChange(event) {
     if (event.target.value == "") {
         setFormError("number", "Campo requerido");
     } else {
@@ -68,7 +88,7 @@ function clearForm() {
     state.inputCep.focus();
 }
 
-function setFormError(key, value){
-const element = document.querySelector(`[data-error="${key}"]`);
-element.innerHTML = value;
+function setFormError(key, value) {
+    const element = document.querySelector(`[data-error="${key}"]`);
+    element.innerHTML = value;
 }
