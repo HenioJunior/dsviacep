@@ -1,5 +1,6 @@
 import Address from "../models/address.js";
 import * as addressService from '../services/address-service.js';
+import * as listController from './list-controller.js'
 
 function State() {
 
@@ -50,6 +51,7 @@ async function handleInputCepChange(event) {
         const address = await addressService.findByCep(cep);
 
         state.inputStreet.value = address.street;
+        state.inputNumber.value = address.number;
         state.inputCity.value = address.city;
         state.address = address;
     
@@ -66,7 +68,8 @@ async function handleInputCepChange(event) {
 
 async function handleBtnSaveClick(event) {
     event.preventDefault();
-    console.log(state.address);
+    listController.addCard(state.address);
+    console.log(state.address)
 }
 
 function handlerInputNumberChange(event) {
