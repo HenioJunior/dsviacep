@@ -10,6 +10,7 @@ function State() {
 
     this.inputCep = null;
     this.inputStreet = null;
+    this.inputNumber = null;
     this.inputCity = null;
 
     this.errorCep = null;
@@ -32,9 +33,14 @@ export function init() {
     state.errorNumber = document.querySelector('[data-error="number"]');
 
     state.inputNumber.addEventListener('change', handlerInputNumberChange);
+    state.inputNumber.addEventListener('keyup', handlerInputNumberKeyup);
     state.btnClear.addEventListener('click', handleBtnClearClick);
     state.btnSave.addEventListener('click', handleBtnSaveClick);
     state.inputCep.addEventListener('change', handleInputCepChange);
+}
+
+function handlerInputNumberKeyup(event) {
+    state.address.number = event.target.value;
 }
 
 async function handleInputCepChange(event) {
@@ -60,7 +66,7 @@ async function handleInputCepChange(event) {
 
 async function handleBtnSaveClick(event) {
     event.preventDefault();
-    console.log(event.target);
+    console.log(state.address);
 }
 
 function handlerInputNumberChange(event) {
